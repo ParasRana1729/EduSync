@@ -4,51 +4,40 @@ A full-stack educational platform built with React and Express.
 
 ## Tech Stack
 
-**Client:**
-- React 19
-- Vite
-- Tailwind CSS
-- Radix UI
-- React Router DOM
+- **Frontend:** React 19, Vite, Tailwind CSS, Radix UI, React Router DOM
+- **Backend:** Express, JWT Authentication, bcryptjs
 
-**Server:**
-- Express
-- JWT Authentication
-- bcryptjs
+## Project Structure
+
+```
+/
+├── src/              # React frontend source
+├── public/           # Static assets
+├── server.js        # Express server
+├── index.html       # HTML entry point
+├── vite.config.js   # Vite configuration
+└── package.json     # Dependencies
+```
 
 ## Getting Started
 
-### Prerequisites
-
-- Node.js
-- npm or yarn
-
 ### Installation
 
-1. Clone the repository
-2. Install server dependencies:
-   ```bash
-   cd server
-   npm install
-   ```
-3. Install client dependencies:
-   ```bash
-   cd client
-   npm install
-   ```
+```bash
+npm install
+```
 
 ### Running the App
 
-Start the server:
+Development (client):
 ```bash
-cd server
-npm start
-```
-
-Start the client:
-```bash
-cd client
 npm run dev
 ```
 
+Production (server):
+```bash
+npm run server
+```
+
 The client runs on `http://localhost:5173` by default.
+The server runs on `http://localhost:5000` by default.
