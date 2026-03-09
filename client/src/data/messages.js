@@ -1,0 +1,58 @@
+const messages = [
+  {
+    id: 1,
+    from: "Dr. Amit Verma",
+    role: "HOD - CSE",
+    subject: "Welcome to Semester II",
+    date: "2025-01-15",
+    read: true,
+    body: "Dear Students, Welcome to Semester II. This semester will be academically rigorous with subjects like Data Structures and OOP. I encourage you all to maintain regular attendance and actively participate in labs. Wishing you a productive semester ahead.",
+  },
+  {
+    id: 2,
+    from: "Examination Cell",
+    role: "Administration",
+    subject: "Mid-Sem Admit Card Available",
+    date: "2025-03-01",
+    read: false,
+    body: "Your admit card for Mid-Semester Examinations (March 2025) is now available for download. Please log in to the examination portal and download your admit card. Carry a printed copy along with your university ID card to the exam hall.",
+  },
+  {
+    id: 3,
+    from: "Training & Placement Cell",
+    role: "Placement",
+    subject: "Resume Submission Deadline Extended",
+    date: "2025-02-25",
+    read: false,
+    body: "The deadline for resume submission for the upcoming TCS & Infosys internship drive has been extended to March 2, 2025. Please upload your updated resume on the placement portal. Contact the T&P office for resume review sessions.",
+  },
+  {
+    id: 4,
+    from: "Prof. Neha Sharma",
+    role: "Mathematics Dept.",
+    subject: "Extra Class on Saturday",
+    date: "2025-02-22",
+    read: true,
+    body: "Dear students, there will be an extra class for Engineering Mathematics-II on Saturday, Feb 22, from 10:00 AM to 12:00 PM in Room 301. We will cover Laplace Transforms. Attendance is optional but highly recommended for exam preparation.",
+  },
+  {
+    id: 5,
+    from: "Library",
+    role: "Administration",
+    subject: "New Books Added - Computer Science Section",
+    date: "2025-02-18",
+    read: true,
+    body: "We are pleased to inform you that new books have been added to the Computer Science section of the library. Titles include 'Introduction to Algorithms' by CLRS, 'Clean Code' by Robert Martin, and 'Design Patterns' by GoF. Visit the library to issue them.",
+  },
+  {
+    id: 6,
+    from: "Sports Department",
+    role: "Extra-curricular",
+    subject: "Inter-University Cricket Tournament Selection",
+    date: "2025-02-12",
+    read: true,
+    body: "Selection trials for the Inter-University Cricket Tournament 2025 will be held on Feb 20 at the university cricket ground. Interested students should report at 7:00 AM with their sports kit. Previous tournament experience preferred but not mandatory.",
+  },
+];
+
+export default messages;
