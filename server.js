@@ -4,7 +4,6 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 
 const app = express();
-const PORT = process.env.PORT || 5000;
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 
 app.use(cors());
@@ -14,6 +13,11 @@ const users = [];
 
 app.post('/api/register', async (req, res) => {
   const { email, password, role } = req.body;
+  
+  if (users.find(u => u.email === email)) {
+    return res.status(400).json({ message: 'User already exists' });
+  }
+  
   const hashedPassword = await bcrypt.hash(password, 10);
   const user = { id: Date.now(), email, password: hashedPassword, role };
   users.push(user);
@@ -39,12 +43,17 @@ app.get('/api/user', (req, res) => {
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
     const user = users.find(u => u.id === decoded.id);
+    if (!user) return res.status(404).json({ message: 'User not found' });
     res.json({ id: user.id, email: user.email, role: user.role });
   } catch {
     res.status(401).json({ message: 'Invalid token' });
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(3000, () => {
+    console.log(`Server running on port 3000`);
+  });
+}
+
+export default app;
