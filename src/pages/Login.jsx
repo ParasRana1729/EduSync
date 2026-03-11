@@ -4,8 +4,8 @@ import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { GraduationCap } from "lucide-react";
 import mainImg from "@/assets/img/main.jpg";
+import logo from "@/assets/img/logo.jpg";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -38,9 +38,7 @@ export default function Login() {
         <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent" />
         <div className="relative z-10 flex flex-col justify-center p-12 text-white">
           <div className="flex items-center gap-3 mb-6">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm">
-              <GraduationCap className="h-7 w-7" />
-            </div>
+            <img src={logo} alt="EduSync" className="h-12 w-12 rounded-xl object-cover" />
             <span className="text-3xl font-bold">EduSync</span>
           </div>
           <h1 className="text-4xl font-bold mb-4">Welcome Back</h1>
@@ -54,9 +52,7 @@ export default function Login() {
       <div className="flex-1 flex items-center justify-center p-8 bg-gray-50">
         <div className="w-full max-w-md">
           <div className="lg:hidden flex items-center justify-center gap-2 mb-8">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary">
-              <GraduationCap className="h-6 w-6 text-primary-foreground" />
-            </div>
+            <img src={logo} alt="EduSync" className="h-10 w-10 rounded-lg object-cover" />
             <span className="text-2xl font-bold">EduSync</span>
           </div>
 

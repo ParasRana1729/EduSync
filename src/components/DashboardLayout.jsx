@@ -5,7 +5,7 @@ import Sidebar from "./Sidebar";
 
 export default function DashboardLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [currentSession, setCurrentSession] = useState("Jan - Jun 2025");
+  const [currentSession, setCurrentSession] = useState("Jan - Jun 2026");
 
   return (
     <div className="min-h-screen bg-muted/30">
@@ -20,7 +20,7 @@ export default function DashboardLayout() {
           onClose={() => setSidebarOpen(false)}
         />
         <main className="flex-1 p-4 lg:p-6 overflow-auto">
-          <Outlet />
+          <Outlet context={{ currentSession }} />
         </main>
       </div>
     </div>

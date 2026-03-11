@@ -1,14 +1,16 @@
 import { useAuth } from "@/context/AuthContext";
+import { useOutletContext } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { CalendarCheck, BarChart3, Mail, Megaphone, Clock, TrendingUp } from "lucide-react";
 import attendance from "@/data/attendance";
 import performanceData from "@/data/performance";
-import messages from "@/data/messages";
-import circulars from "@/data/circulars";
+import messagesBySession from "@/data/messages";
+import circularsBySession from "@/data/circulars";
 
 export default function Home() {
   const { user } = useAuth();
+  const { currentSession } = useOutletContext();
 
   const userAttendance = attendance[user?.rollNo] || [];
   const totalAttended = userAttendance.reduce((sum, s) => sum + s.attended, 0);
@@ -18,8 +20,11 @@ export default function Home() {
   const userPerf = performanceData[user?.rollNo];
   const cgpa = userPerf?.cgpa || "N/A";
 
-  const unreadMessages = messages.filter((m) => !m.read).length;
-  const recentCirculars = circulars.slice(0, 3);
+  const sessionMessages = messagesBySession[currentSession] || [];
+  const sessionCirculars = circularsBySession[currentSession] || [];
+
+  const unreadMessages = sessionMessages.filter((m) => !m.read).length;
+  const recentCirculars = sessionCirculars.slice(0, 3);
 
   const statCards = [
     {
@@ -41,7 +46,7 @@ export default function Home() {
     {
       title: "Unread Messages",
       value: unreadMessages,
-      description: `${messages.length} total messages`,
+      description: `${sessionMessages.length} total messages`,
       icon: Mail,
       color: "text-violet-600",
       bg: "bg-violet-50",

@@ -1,26 +1,36 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useOutletContext } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Inbox, ArrowLeft, Mail, MailOpen, Clock, User } from "lucide-react";
-import messagesData from "@/data/messages";
+import messagesBySession from "@/data/messages";
+import { useAuth } from "@/context/AuthContext";
 
 export default function IndexBox() {
+  const { currentSession } = useOutletContext();
+  const { user } = useAuth();
   const [selectedId, setSelectedId] = useState(null);
-  const [readStatus, setReadStatus] = useState(
-    () => Object.fromEntries(messagesData.map((m) => [m.id, m.read]))
-  );
+  const [readStatus, setReadStatus] = useState(() => {
+    const saved = localStorage.getItem(`messageRead_${user?.id}_${currentSession}`);
+    return saved ? JSON.parse(saved) : {};
+  });
+
+  const sessionMessages = messagesBySession[currentSession] || [];
+
+  useEffect(() => {
+    localStorage.setItem(`messageRead_${user?.id}_${currentSession}`, JSON.stringify(readStatus));
+  }, [readStatus, user?.id, currentSession]);
 
   function openMessage(msg) {
     setSelectedId(msg.id);
     setReadStatus((prev) => ({ ...prev, [msg.id]: true }));
   }
 
-  const selectedMessage = messagesData.find((m) => m.id === selectedId);
-  const unreadCount = Object.values(readStatus).filter((r) => !r).length;
+  const selectedMessage = sessionMessages.find((m) => m.id === selectedId);
+  const unreadCount = sessionMessages.filter((m) => !readStatus[m.id] && !m.read).length;
 
-  // Message detail view
   if (selectedMessage) {
     return (
       <div className="space-y-6">
@@ -65,7 +75,6 @@ export default function IndexBox() {
     );
   }
 
-  // Inbox list view
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -82,8 +91,8 @@ export default function IndexBox() {
 
       <Card>
         <CardContent className="p-0">
-          {messagesData.map((msg, i) => {
-            const isRead = readStatus[msg.id];
+          {sessionMessages.map((msg, i) => {
+            const isRead = readStatus[msg.id] || msg.read;
             return (
               <div key={msg.id}>
                 <div
@@ -121,7 +130,7 @@ export default function IndexBox() {
                     </div>
                   </div>
                 </div>
-                {i < messagesData.length - 1 && <Separator />}
+                {i < sessionMessages.length - 1 && <Separator />}
               </div>
             );
           })}
