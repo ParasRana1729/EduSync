@@ -2,90 +2,107 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { GraduationCap } from "lucide-react";
+import mainImg from "@/assets/img/main.jpg";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [isRegister, setIsRegister] = useState(false);
-  const { login, register } = useAuth();
+  const { login } = useAuth();
   const navigate = useNavigate();
 
-  async function handleSubmit(e) {
+  function handleSubmit(e) {
     e.preventDefault();
     setError("");
     
-    let result;
-    if (isRegister) {
-      result = await register(email, password);
-      if (result.success) {
-        const loginResult = await login(email, password);
-        if (loginResult.success) {
-          navigate("/home");
-        }
-      } else {
-        setError(result.message);
-      }
+    const result = login(email, password);
+    if (result.success) {
+      navigate("/home");
     } else {
-      result = await login(email, password);
-      if (result.success) {
-        navigate("/home");
-      } else {
-        setError(result.message);
-      }
+      setError(result.message);
     }
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle className="text-2xl text-center">
-            {isRegister ? "Create Account" : "Login to EduSync"}
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
+    <div className="min-h-screen flex">
+      {/* Left side - Image */}
+      <div className="hidden lg:flex lg:w-1/2 relative">
+        <img 
+          src={mainImg} 
+          alt="Campus" 
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent" />
+        <div className="relative z-10 flex flex-col justify-center p-12 text-white">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm">
+              <GraduationCap className="h-7 w-7" />
+            </div>
+            <span className="text-3xl font-bold">EduSync</span>
+          </div>
+          <h1 className="text-4xl font-bold mb-4">Welcome Back</h1>
+          <p className="text-lg text-white/80 max-w-md">
+            Access your academic information, attendance, performance, and more all in one place.
+          </p>
+        </div>
+      </div>
+
+      {/* Right side - Login Form */}
+      <div className="flex-1 flex items-center justify-center p-8 bg-gray-50">
+        <div className="w-full max-w-md">
+          <div className="lg:hidden flex items-center justify-center gap-2 mb-8">
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary">
+              <GraduationCap className="h-6 w-6 text-primary-foreground" />
+            </div>
+            <span className="text-2xl font-bold">EduSync</span>
+          </div>
+
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Student Login</h2>
+          <p className="text-gray-500 mb-8">Enter your credentials to access your portal</p>
+
+          <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email" className="text-gray-700">Email</Label>
               <Input
                 id="email"
                 type="email"
+                placeholder="your.email@chitkara.edu.in"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                className="mt-1 h-11"
                 required
               />
             </div>
             <div>
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password" className="text-gray-700">Password</Label>
               <Input
                 id="password"
                 type="password"
+                placeholder="Enter your password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                className="mt-1 h-11"
                 required
               />
             </div>
-            {error && <p className="text-red-500 text-sm">{error}</p>}
-            <Button type="submit" className="w-full">
-              {isRegister ? "Sign Up" : "Login"}
+            
+            {error && (
+              <p className="text-red-500 text-sm bg-red-50 p-3 rounded-lg">{error}</p>
+            )}
+            
+            <Button type="submit" className="w-full h-11 text-base font-medium">
+              Login
             </Button>
-            <p className="text-center text-sm">
-              {isRegister ? "Already have an account?" : "Don't have an account?"}{" "}
-              <button
-                type="button"
-                onClick={() => setIsRegister(!isRegister)}
-                className="text-blue-600 hover:underline"
-              >
-                {isRegister ? "Login" : "Sign Up"}
-              </button>
-            </p>
           </form>
-        </CardContent>
-      </Card>
+
+          <p className="mt-8 text-center text-sm text-gray-500">
+            Contact your administrator for login credentials
+          </p>
+        </div>
+      </div>
     </div>
   );
 }
