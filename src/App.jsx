@@ -8,12 +8,23 @@ import Performance from "@/pages/Performance";
 import MyInfo from "@/pages/MyInfo";
 import Circular from "@/pages/Circular";
 import IndexBox from "@/pages/IndexBox";
+import Login from "@/pages/Login";
+
+import { useAuth } from "@/context/AuthContext";
 
 export default function App() {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+  }
+
   return (
     <BrowserRouter>
       <AuthProvider>
         <Routes>
+          <Route path="/login" element={<Login />} />
+          
           {/* Protected dashboard routes */}
           <Route
             element={
@@ -30,8 +41,8 @@ export default function App() {
             <Route path="/messages" element={<IndexBox />} />
           </Route>
 
-          {/* Redirect root to home */}
-          <Route path="*" element={<Navigate to="/home" replace />} />
+          {/* Redirect root to login or home based on auth status */}
+          <Route path="*" element={user ? <Navigate to="/home" replace /> : <Navigate to="/login" replace />} />
         </Routes>
       </AuthProvider>
     </BrowserRouter>
