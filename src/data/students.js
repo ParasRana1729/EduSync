@@ -52,7 +52,7 @@ const students = [
   },
   {
     id: 4,
-    name: "Pritish Talwar",
+    name: "Sunil Kumar",
     rollNo: "2410991593",
     email: "pritish1593.becse24@chitkara.edu.in",
     password: "12345678",
@@ -60,7 +60,7 @@ const students = [
     batch: "2024-2028",
     section: "24-CSE-C2",
     semester: 4,
-    fatherName: "Mr. Sunil Kumar",
+    fatherName: "Mr. Suresh Kumar",
     motherName: "Mrs. Meena Kumar",
     phone: "9876543212",
     dob: "2006-01-10",
