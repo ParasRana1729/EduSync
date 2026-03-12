@@ -14,13 +14,13 @@ export default function Login() {
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
     setError("");
     
-    const result = login(email, password);
+    const result = await login(email, password);
     if (result.success) {
-      navigate("/home");
+      navigate("/");
     } else {
       setError(result.message);
     }

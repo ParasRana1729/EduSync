@@ -103,15 +103,21 @@ const users = [
 app.post('/api/login', (req, res) => {
   const { email, password } = req.body;
   
+  console.log('Login attempt:', email, password);
+  console.log('Stored credentials:', userCredentials);
+  
   if (userCredentials[email] !== password) {
+    console.log('Invalid password');
     return res.status(401).json({ message: 'Invalid email or password' });
   }
   
   const user = users.find(u => u.email === email);
   if (!user) {
+    console.log('User not found');
     return res.status(401).json({ message: 'Invalid email or password' });
   }
 
+  console.log('Login success');
   const token = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, { expiresIn: '7d' });
   
   res.json({ token, user });
