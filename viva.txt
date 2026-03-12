@@ -1,0 +1,180 @@
+==============================================
+VIVA QUESTIONS - EduSync
+==============================================
+
+1. What is this project? What does it do?
+   EduSync is a full-stack educational platform for students to access their 
+   academic information including attendance, performance, personal info, 
+   circulars, and messages.
+
+2. What is the tech stack?
+   Frontend: React 19, Vite, React Router, Tailwind CSS, Radix UI
+   Backend: Express 5, Node.js, JWT, bcryptjs
+
+3. What is JWT?
+   JWT (JSON Web Token) is a compact, URL-safe token format for securely 
+   transmitting information between parties. It has three parts: Header, 
+   Payload, and Signature.
+
+4. How is JWT implemented in your project?
+   In server.js, JWT is generated on login using jwt.sign() with user data 
+   (id, email, role) and a secret key, with 24-hour expiry. It's verified 
+   using jwt.verify() in authMiddleware.
+
+5. How is login implemented in this project?
+   Login validates email/password against mock student data in students.js. 
+   On success, user is stored in localStorage with key "edusync_user".
+
+6. Where is the login function defined?
+   In src/context/AuthContext.jsx - provides login/logout functions via 
+   React Context API.
+
+7. How does the app retain data when user refreshes the site?
+   Uses localStorage. On login: localStorage.setItem("edusync_user", JSON.
+   stringify(user)). On mount: checks localStorage and restores user if found.
+
+8. What data is stored in localStorage?
+   "edusync_user" - contains user object (id, name, email, role). Also 
+   stores notification/message read status.
+
+9. What are the routes in your application?
+   Frontend: /login, /home, /attendance, /performance, /my-info, /circulars, 
+   /messages
+   Backend: POST /api/register, POST /api/login, GET /api/user
+
+10. How are routes protected?
+    Using ProtectedRoute component in App.jsx - checks if user exists in 
+    AuthContext, redirects to /login if not authenticated.
+
+11. What is Express?
+    Express is a minimal Node.js web application framework for building 
+    APIs and web applications.
+
+12. How is Express used in your project?
+    server.js creates an Express app with CORS and JSON parsing middleware. 
+    Defines API routes for register, login, and user validation.
+
+13. What middleware is used in Express?
+    cors - for cross-origin requests, express.json() - for parsing JSON bodies
+
+14. What is authentication?
+    Authentication is verifying WHO a user is (identity verification). 
+    Example: Login with username/password proves "you are John."
+
+15. What is authorisation?
+    Authorisation is determining WHAT a user can access (permission check). 
+    Example: "John can view grades but not modify them."
+
+16. How is authentication vs authorisation implemented in your project?
+    Authentication: AuthContext.login() validates credentials against mock data.
+    Authorisation: ProtectedRoute checks if user is logged in before allowing 
+    access to dashboard routes.
+
+17. What is the difference between authentication and authorisation?
+    Authentication: Who are you? (proving identity)
+    Authorisation: What can you do? (granting permissions)
+
+18. What is bcryptjs used for?
+    Password hashing. Used in backend to hash passwords before storing and 
+    verify during login. Prevents storing plaintext passwords.
+
+19. What is the purpose of ProtectedRoute?
+    A wrapper component that only renders child routes if user is authenticated. 
+    Redirects unauthenticated users to /login.
+
+20. What is CORS? Why is it used?
+    CORS (Cross-Origin Resource Sharing) is a browser security feature. 
+    Used in backend to allow frontend (different port) to make API requests.
+
+==============================================
+REACT QUESTIONS (21-30)
+==============================================
+
+21. What is React?
+    React is a JavaScript library for building user interfaces, known for its 
+    component-based architecture and virtual DOM for efficient rendering.
+
+22. What is the purpose of App.jsx?
+    App.jsx defines the main routing structure of the application using React 
+    Router. It contains Route definitions and wraps protected routes with 
+    ProtectedRoute component.
+
+23. What is Context API in React?
+    Context API provides a way to pass data through the component tree without 
+    manually passing props at every level. AuthContext.jsx uses it to provide 
+    authentication state globally.
+
+24. What is useState in React?
+    useState is a React hook that allows functional components to have local 
+    state. It returns an array with current state value and a function to 
+    update it.
+
+25. What is useEffect in React?
+    useEffect is a React hook for performing side effects in functional 
+    components. Used in AuthContext to check localStorage on mount and save 
+    user changes to localStorage.
+
+26. What is React Router?
+    React Router is a library for client-side routing in React applications. 
+    Enables navigation between different pages without full page reloads.
+
+27. What is the purpose of useNavigate in React?
+    useNavigate is a hook from React Router that provides programmatic 
+    navigation. Used to redirect users after login/logout.
+
+28. What is a component in React?
+    Components are reusable, independent pieces of UI. In this project: 
+    Sidebar, Navbar, ProtectedRoute, Login, Home, Attendance, etc.
+
+29. What is the difference between controlled and uncontrolled components?
+    Controlled: Form data handled by React state (Login form uses this)
+    Uncontrolled: Form data handled by DOM itself (ref-based)
+
+30. What is Vite? Why is it used?
+    Vite is a modern build tool for frontend development. Provides fast dev 
+    server, hot module replacement, and optimized production builds.
+
+==============================================
+EXPRESS QUESTIONS (31-40)
+==============================================
+
+31. What is Node.js?
+    Node.js is a JavaScript runtime built on Chrome's V8 engine that allows 
+    running JavaScript on the server side.
+
+32. What is the difference between GET and POST requests?
+    GET: Retrieves data from server (used in /api/user to get user info)
+    POST: Sends data to server to create/update resources (used in /api/login, 
+    /api/register)
+
+33. What is req.body in Express?
+    req.body contains data sent in the request body. express.json() middleware 
+    parses JSON data from incoming requests.
+
+34. What is req.params in Express?
+    req.params contains route parameters (e.g., /users/:id gives req.params.id)
+
+35. What is req.header in Express?
+    req.header retrieves HTTP headers from the request. Used in authMiddleware 
+    to get Authorization header for JWT verification.
+
+36. What is a REST API?
+    REST (Representational State Transfer) is an architectural style for 
+    designing networked applications. Uses HTTP methods: GET, POST, PUT, DELETE.
+
+37. What is the purpose of app.listen()?
+    Starts the Express server to listen for incoming requests on a specified 
+    port (5000 in this project).
+
+38. What is the difference between res.json() and res.send()?
+    res.json() sends JSON response with proper content-type header.
+    res.send() can send any type of response (string, object, HTML).
+
+39. What is the purpose of next() in Express middleware?
+    next() passes control to the next middleware function in the stack. 
+    Required unless responding to end the request.
+
+40. What is middleware in Express?
+    Middleware functions are functions that have access to req, res, and next. 
+    They can modify request/response, end the cycle, or call next middleware.
+
