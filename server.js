@@ -1,22 +1,12 @@
+import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import jwt from 'jsonwebtoken';
 
 const app = express();
-const JWT_SECRET = process.env.JWT_SECRET;
+const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret-key-not-for-production-use';
 
-if (!JWT_SECRET) {
-  throw new Error('JWT_SECRET environment variable is required');
-}
-
-const corsOptions = {
-  origin: process.env.NODE_ENV === 'production' 
-    ? 'https://edu-sync-lake.vercel.app'
-    : 'http://localhost:5173',
-  credentials: true,
-};
-
-app.use(cors(corsOptions));
+app.use(cors());
 app.use(express.json());
 
 const userCredentials = {
