@@ -11,7 +11,7 @@ if (!JWT_SECRET) {
 
 const corsOptions = {
   origin: process.env.NODE_ENV === 'production' 
-    ? 'https://your-domain.vercel.app'  // Replace with actual Vercel URL
+    ? 'https://edu-sync-lake.vercel.app'
     : 'http://localhost:5173',
   credentials: true,
 };
