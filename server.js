@@ -1,13 +1,31 @@
 import express from 'express';
 import cors from 'cors';
 import jwt from 'jsonwebtoken';
-import bcrypt from 'bcryptjs';
 
 const app = express();
-const JWT_SECRET = process.env.JWT_SECRET || 'edusync-secret-key-2024';
+const JWT_SECRET = process.env.JWT_SECRET;
 
-app.use(cors());
+if (!JWT_SECRET) {
+  throw new Error('JWT_SECRET environment variable is required');
+}
+
+const corsOptions = {
+  origin: process.env.NODE_ENV === 'production' 
+    ? 'https://your-domain.vercel.app'  // Replace with actual Vercel URL
+    : 'http://localhost:5173',
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
+
+const userCredentials = {
+  "paras1556.becse24@chitkara.edu.in": "12345678",
+  "ananya1342.becse24@chitkara.edu.in": "2410991342",
+  "rahul1478.becse24@chitkara.edu.in": "2410991478",
+  "pritish1593.becse24@chitkara.edu.in": "12345678",
+  "test0000.becse24@chitkara.edu.in": "12345678",
+};
 
 const users = [
   {
@@ -15,7 +33,6 @@ const users = [
     name: "Paras Rana",
     rollNo: "2410991556",
     email: "paras1556.becse24@chitkara.edu.in",
-    password: "",
     branch: "B.E. CSE",
     batch: "2024-2028",
     section: "24-CSE-C2",
@@ -32,7 +49,6 @@ const users = [
     name: "Ananya Gupta",
     rollNo: "2410991342",
     email: "ananya1342.becse24@chitkara.edu.in",
-    password: "",
     branch: "B.E. CSE",
     batch: "2024-2028",
     section: "24-CSE-C1",
@@ -49,7 +65,6 @@ const users = [
     name: "Rahul Kumar",
     rollNo: "2410991478",
     email: "rahul1478.becse24@chitkara.edu.in",
-    password: "",
     branch: "B.E. CSE",
     batch: "2024-2028",
     section: "24-CSE-C2",
@@ -66,7 +81,6 @@ const users = [
     name: "Sunil Kumar",
     rollNo: "2410991593",
     email: "pritish1593.becse24@chitkara.edu.in",
-    password: "",
     branch: "B.E. CSE",
     batch: "2024-2028",
     section: "24-CSE-C2",
@@ -83,7 +97,6 @@ const users = [
     name: "Test",
     rollNo: "2410990000",
     email: "test0000.becse24@chitkara.edu.in",
-    password: "",
     branch: "B.E. CSE",
     batch: "2024-2028",
     section: "24-CSE-C2",
@@ -97,29 +110,21 @@ const users = [
   }
 ];
 
-(async () => {
-  const passwords = ['12345678', '2410991342', '2410991478', '12345678', '12345678'];
-  for (let i = 0; i < users.length; i++) {
-    users[i].password = await bcrypt.hash(passwords[i], 10);
-  }
-})();
-
-app.post('/api/login', async (req, res) => {
+app.post('/api/login', (req, res) => {
   const { email, password } = req.body;
+  
+  if (userCredentials[email] !== password) {
+    return res.status(401).json({ message: 'Invalid email or password' });
+  }
+  
   const user = users.find(u => u.email === email);
   if (!user) {
     return res.status(401).json({ message: 'Invalid email or password' });
   }
-  
-  const isValid = await bcrypt.compare(password, user.password);
-  if (!isValid) {
-    return res.status(401).json({ message: 'Invalid email or password' });
-  }
 
-  const { password: _, ...safeUser } = user;
   const token = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, { expiresIn: '7d' });
   
-  res.json({ token, user: safeUser });
+  res.json({ token, user });
 });
 
 app.get('/api/user', (req, res) => {
@@ -134,8 +139,7 @@ app.get('/api/user', (req, res) => {
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
-    const { password: _, ...safeUser } = user;
-    res.json(safeUser);
+    res.json(user);
   } catch {
     res.status(401).json({ message: 'Invalid token' });
   }

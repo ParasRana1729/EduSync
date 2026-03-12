@@ -1,7 +1,33 @@
 import jwt from 'jsonwebtoken';
-import bcrypt from 'bcryptjs';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'edusync-secret-key-2024';
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) {
+  throw new Error('JWT_SECRET environment variable is required');
+}
+
+const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || 'http://localhost:5173';
+
+export default async function handler(req, res) {
+  res.setHeader('Access-Control-Allow-Origin', ALLOWED_ORIGIN);
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  
+  if (req.method === 'OPTIONS') {
+    res.setHeader('Access-Control-Allow-Methods', 'POST');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    return res.status(200).end();
+  }
+
+  if (req.method !== 'POST') {
+    return res.status(405).json({ message: 'Method not allowed' });
+  }
+
+const userCredentials = {
+  "paras1556.becse24@chitkara.edu.in": "12345678",
+  "ananya1342.becse24@chitkara.edu.in": "2410991342",
+  "rahul1478.becse24@chitkara.edu.in": "2410991478",
+  "pritish1593.becse24@chitkara.edu.in": "12345678",
+  "test0000.becse24@chitkara.edu.in": "12345678",
+};
 
 const users = [
   {
@@ -9,7 +35,6 @@ const users = [
     name: "Paras Rana",
     rollNo: "2410991556",
     email: "paras1556.becse24@chitkara.edu.in",
-    password: "$2a$10$X7VYHyApGXqNz5rF5G5J4.1J5Y9Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z", // 12345678
     branch: "B.E. CSE",
     batch: "2024-2028",
     section: "24-CSE-C2",
@@ -26,7 +51,6 @@ const users = [
     name: "Ananya Gupta",
     rollNo: "2410991342",
     email: "ananya1342.becse24@chitkara.edu.in",
-    password: "$2a$10$hash", // 2410991342
     branch: "B.E. CSE",
     batch: "2024-2028",
     section: "24-CSE-C1",
@@ -43,7 +67,6 @@ const users = [
     name: "Rahul Kumar",
     rollNo: "2410991478",
     email: "rahul1478.becse24@chitkara.edu.in",
-    password: "$2a$10$hash", // 2410991478
     branch: "B.E. CSE",
     batch: "2024-2028",
     section: "24-CSE-C2",
@@ -60,7 +83,6 @@ const users = [
     name: "Sunil Kumar",
     rollNo: "2410991593",
     email: "pritish1593.becse24@chitkara.edu.in",
-    password: "$2a$10$hash", // 12345678
     branch: "B.E. CSE",
     batch: "2024-2028",
     section: "24-CSE-C2",
@@ -77,7 +99,6 @@ const users = [
     name: "Test",
     rollNo: "2410990000",
     email: "test0000.becse24@chitkara.edu.in",
-    password: "$2a$10$hash", // 12345678
     branch: "B.E. CSE",
     batch: "2024-2028",
     section: "24-CSE-C2",
@@ -91,16 +112,6 @@ const users = [
   }
 ];
 
-const hashedPasswords = {};
-
-(async () => {
-  const passwords = ['12345678', '2410991342', '2410991478', '12345678', '12345678'];
-  for (let i = 0; i < users.length; i++) {
-    hashedPasswords[i + 1] = await bcrypt.hash(passwords[i], 10);
-    users[i].password = hashedPasswords[i + 1];
-  }
-})();
-
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ message: 'Method not allowed' });
@@ -108,18 +119,16 @@ export default async function handler(req, res) {
 
   const { email, password } = req.body;
   
+  if (userCredentials[email] !== password) {
+    return res.status(401).json({ message: 'Invalid email or password' });
+  }
+  
   const user = users.find(u => u.email === email);
   if (!user) {
     return res.status(401).json({ message: 'Invalid email or password' });
   }
-  
-  const isValid = await bcrypt.compare(password, user.password);
-  if (!isValid) {
-    return res.status(401).json({ message: 'Invalid email or password' });
-  }
 
-  const { password: _, ...safeUser } = user;
   const token = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, { expiresIn: '7d' });
   
-  res.json({ token, user: safeUser });
+  res.json({ token, user });
 }
